@@ -37,6 +37,7 @@ namespace SpeedrunHistoryVisualizerAPI.Controllers
             return Ok(new { message = "Token refreshed successfully" });
         }
 
+        [Authorize]
         [HttpPost("logout")]
         public IActionResult Logout()
         {

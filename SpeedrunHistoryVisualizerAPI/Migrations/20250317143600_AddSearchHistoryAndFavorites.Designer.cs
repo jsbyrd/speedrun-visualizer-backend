@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpeedrunHistoryVisualizerAPI.Data;
 
@@ -11,9 +12,11 @@ using SpeedrunHistoryVisualizerAPI.Data;
 namespace SpeedrunHistoryVisualizerAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317143600_AddSearchHistoryAndFavorites")]
+    partial class AddSearchHistoryAndFavorites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +30,6 @@ namespace SpeedrunHistoryVisualizerAPI.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateFavorited")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("GameId")
                         .IsRequired()
@@ -50,7 +50,7 @@ namespace SpeedrunHistoryVisualizerAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favorites");
+                    b.ToTable("Favorite");
                 });
 
             modelBuilder.Entity("SpeedrunHistoryVisualizerAPI.Entities.SearchHistory", b =>

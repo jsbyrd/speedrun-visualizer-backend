@@ -53,9 +53,37 @@ namespace SpeedrunHistoryVisualizerAPI.Services
                 return false;
 
             var user = await context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            Console.WriteLine(user is null);
             if (user is null) return false;
 
-            await GenerateAndSaveTokens(user);
+            // Create tokens
+            var accessToken = CreateAccessToken(user);
+            //var newRefreshToken = CreateRefreshToken(user);
+            DateTime accessTokenExpiryDate = DateTime.UtcNow.AddMinutes(1);
+            //DateTime refreshTokenExpiryDate = DateTime.UtcNow.AddDays(1);
+
+            // Update user with the new refresh token
+            //user.RefreshToken = newRefreshToken;
+            //user.RefreshTokenExpiryTime = refreshTokenExpiryDate;
+            //await context.SaveChangesAsync();
+
+            // Configure cookies
+            response.Cookies.Append("Authentication", accessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = accessTokenExpiryDate,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+
+            //response.Cookies.Append("Refresh", newRefreshToken, new CookieOptions
+            //{
+            //    HttpOnly = true,
+            //    Expires = refreshTokenExpiryDate,
+            //    Secure = true,
+            //    SameSite = SameSiteMode.None
+            //});
+
             return true;
         }
 

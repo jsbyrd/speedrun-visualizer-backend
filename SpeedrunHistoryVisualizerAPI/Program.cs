@@ -50,24 +50,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISearchHistoryService, SearchHistoryService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 builder.Services.AddCors(options =>
 {
     var allowedOrigins = builder.Environment.IsDevelopment()
-        ? ["http://localhost:5173"]  // Development origin (Vite, React, etc.)
-        : new[] { builder.Configuration["AllowedOrigins"]! }; // Read from config in production
+        ? ["http://localhost:5173"]
+        : new[] { builder.Configuration["AllowedOrigins"]! };
 
     options.AddPolicy("AllowedOriginsPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigins) // Allow only specific origins
-              .AllowAnyMethod()  // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-              .AllowAnyHeader()  // Allow all headers
-              .AllowCredentials(); // Required if using cookies or authentication headers
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
